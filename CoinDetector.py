@@ -40,6 +40,7 @@ class CoinDetector():
     def PMSF(self, image, spatial_win_r, color_win_r):
         p_shifted = cv2.pyrMeanShiftFiltering(
             image, spatial_win_r, color_win_r)
+        cv2.imshow("PMSF", p_shifted)
         return p_shifted
 
     def otsu_threshold(self, image):
@@ -76,7 +77,7 @@ class CoinDetector():
 
         for position in positions:
             (x, y, r, label) = position
-            cv2.circle(image, (int(x), int(y)), int(r), (0, 255, 0), 2)
+            cv2.circle(image, (int(x), int(y)), int(r), (255, 0, 0), 2)
             # calculate coins :D
             coinType = 0 if r <= ratioPatterns[0] else (len(ratioPatterns) - 1)
             for i in range(1, len(ratioPatterns)):
@@ -107,7 +108,6 @@ class CoinDetector():
         image = self.resize_img(0.3)
         p_shifted = self.PMSF(image, 21, 51)
         gray, thresh_img = self.otsu_threshold(p_shifted)
-        # min_distance is changable
         out_img = self.my_watershed(image, gray, thresh_img, 20)
 
 
@@ -117,4 +117,4 @@ if __name__ == '__main__':
     coinTypes = list(set(map(int, raw_input(
         "Enter available coin (example. 1, 5, 10): ").split(","))))
     coinTypes.sort()
-    coins = CoinDetector(path='images/coin11.jpg')
+    coins = CoinDetector(path='images/coin5.jpg')
